@@ -1,0 +1,86 @@
+{{#if (ne (checkSystemsetting "viewBiotabPermission") "mini")}}
+
+    <div class="pullLeft" style="display: flex; width: 320px;">
+        <div class="pullLeft area-box">
+            <div class="bioInformationArea floating-label-group">
+                {{#if locked}}
+                    <input class="sheet-infoValues" type="text" value="{{data.system.breed}}" autocomplete="off" autofocus required />
+                {{else}}
+                    <select class="sheet-infoValues editable" name="system.breed" data-name="data.system.breed" data-dtype="String">
+                        {{#select data.system.breed}}
+                            <option value="">- {{localize "wod.labels.select"}} -</option>
+                            <option value="Homid">{{localize "wod.bio.breedname.homid"}}</option>
+                            <option value="Metis">{{localize "wod.bio.breedname.metis"}}</option>
+                            <option value="Lupus">{{localize "wod.bio.breedname.lupus"}}</option>
+                        {{/select}}
+                    </select>
+                {{/if}}
+                <span class="floating-label">{{localize "wod.bio.breed"}}</span>
+            </div>
+
+            <div class="bioInformationArea floating-label-group">
+                {{#if locked}}
+                    <input class="sheet-infoValues" type="text" value="{{data.system.auspice}}" autocomplete="off" autofocus required />
+                {{else}}
+                    <select class="sheet-infoValues editable" name="system.auspice" data-name="data.system.auspice" data-dtype="String">
+                        {{#select data.system.auspice}}
+                            <option value="">- {{localize "wod.labels.select"}} -</option>
+                            <option value="Ragabash">{{localize "wod.bio.auspicename.ragabash"}}</option>
+                            <option value="Theurge">{{localize "wod.bio.auspicename.theurge"}}</option>
+                            <option value="Philodox">{{localize "wod.bio.auspicename.philodox"}}</option>
+                            <option value="Galliard">{{localize "wod.bio.auspicename.galliard"}}</option>
+                            <option value="Ahroun">{{localize "wod.bio.auspicename.ahroun"}}</option>
+                        {{/select}}
+                    </select>
+                    
+                {{/if}}
+                <span class="floating-label">{{localize "wod.bio.auspice"}}</span>
+            </div>
+
+            <div class="bioInformationArea floating-label-group">
+                {{#if locked}}                
+                    <input class="sheet-infoValues" type="text" value="{{#if (eq actor.system.tribe 'custom')}}{{actor.system.custom.tribe}}{{else}}{{localize data.system.tribe}}{{/if}}" data-dtype="String" autofocus required />
+                {{else}}
+                    <select class="sheet-infoValues {{#if (eq actor.system.tribe 'custom')}}edit-property{{/if}} editable" name="system.tribe" data-name="data.system.tribe" data-dtype="String">
+                        {{#select data.system.tribe}}
+                            <option value="">- {{localize "wod.labels.select"}} -</option>
+                            <option value="custom">{{#if (eq actor.system.custom.tribe "")}}- {{localize "wod.labels.customtribe"}} -{{else}}{{actor.system.custom.tribe}} ({{localize "wod.labels.customtribe"}}){{/if}}</option>                            
+                            {{#each game.bio.tribe as |tribe id|}}
+                                <option value="{{tribe}}">{{localize tribe}}</option>
+                            {{/each}}
+                        {{/select}}
+                    </select>
+                    {{#if (eq actor.system.tribe "custom")}}
+                        <a class="pullLeft item-edit" title="{{localize 'wod.labels.customizetribe'}}" data-type="Bio" data-name="{{localize 'wod.bio.tribe'}}" data-item-id="tribe" data-custom="{{actor.system.custom.tribe}}"><i class="fa-solid fa-pen-to-square"></i></a>
+                    {{/if}}
+                {{/if}} 
+                <span class="floating-label">{{localize "wod.bio.tribe"}}</span>        
+            </div>      
+
+        </div>
+
+        <div class="pullLeft area-box">
+
+            <div class="bioInformationArea floating-label-group">
+                {{#if locked}}
+                    <input class="sheet-infoValues" type="text" value="{{data.system.packname}}" autocomplete="off" autofocus required />
+                {{else}}
+                    <input class="sheet-infoValues editable" name="system.packname" type="text" value="{{data.system.packname}}" data-name="data.system.packname" data-dtype="String" autocomplete="off" autofocus required />
+                {{/if}}
+                <span class="floating-label">{{localize "wod.bio.packname"}}</span>
+            </div>
+
+            <div class="bioInformationArea floating-label-group">
+                {{#if locked}}
+                    <input class="sheet-infoValues" type="text" value="{{data.system.packtotem}}" autocomplete="off" autofocus required />
+                {{else}}
+                    <input class="sheet-infoValues editable" name="system.packtotem" type="text" value="{{data.system.packtotem}}" data-name="data.system.packtotem" data-dtype="String" autocomplete="off" autofocus required />
+                {{/if}}        
+                <span class="floating-label">{{localize "wod.bio.packtotem"}}</span>
+            </div>
+
+        </div>    
+
+    </div>
+
+{{/if}}

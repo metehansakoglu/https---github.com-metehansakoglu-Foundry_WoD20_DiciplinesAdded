@@ -1,0 +1,47 @@
+<div class="sheet-area">	
+	<div class="sheet-headline sheet-banner splatFont">
+		<span class="sheet-banner-text">{{localize "wod.gear.headline"}}</span>
+	</div>
+	
+	<div class="clearareaBox area-box">
+		<div>
+			{{#if locked}}
+				<div class="sheet-gearArea headlineNormal textarea">{{{data.system.gear}}}</div>
+			{{else}}
+				{{editor data.gear target="system.gear" button=false owner=owner editable=true}}
+			{{/if}}
+		</div>
+	</div>
+</div>
+
+<div class="sheet-headline sheet-banner splatFont">
+	<span class="sheet-banner-text">{{localize "wod.gear.money"}}</span>
+</div>
+
+<div class="sheet-area" style="flex-flow: row nowrap;">	
+	<div class="clearareaBox">
+
+		<div class="pullLeft" style="display: flex;">
+			<div class="area-box">		
+
+				<div class="pullLeft bioInformationArea floating-label-group half">
+					{{#if locked}}
+						<input class="sheet-infoValues" type="text" value="{{data.system.money.carried}}" autocomplete="off" autofocus required />
+					{{else}}
+						<input class="sheet-infoValues editable" name="system.money.carried" type="text" value="{{data.system.money.carried}}" data-name="data.system.money.carried" data-dtype="Number" autocomplete="off" autofocus required />
+					{{/if}}
+					<span class="floating-label">{{localize "wod.gear.moneycarried"}}</span>
+				</div>
+
+				<div class="pullLeft bioInformationArea floating-label-group half">
+					{{#if locked}}
+						<input class="sheet-infoValues" type="text" value="{{data.system.money.carried}}" autocomplete="off" autofocus required />
+					{{else}}
+						<input class="sheet-infoValues editable" name="system.money.bank" type="text" value="{{data.system.money.bank}}" data-name="data.system.money.bank" data-dtype="Number" autocomplete="off" autofocus required />
+					{{/if}}
+					<span class="floating-label">{{localize "wod.gear.moneybank"}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
