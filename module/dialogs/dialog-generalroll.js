@@ -5,6 +5,7 @@ import BonusHelper from "../scripts/bonus-helpers.js";
 
 export class GeneralRoll {
     constructor(key, type) {
+
         this.canRoll = false;
         this.close = false;
 
@@ -51,6 +52,12 @@ export class GeneralRoll {
         else if (type == "dice") {
             this.key = "dice";
             this.attributeValue = 3;
+        }
+        else if(type =="dodge"){
+            this.abilityKey="athletics";
+            this.attributeKey="dexterity";
+            this.abilityName = "athletics";
+            this.attributeName = "Dexterity"
         }
     }
 }
