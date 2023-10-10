@@ -58,6 +58,8 @@ export class GeneralRoll {
             this.abilityKey="athletics";
             this.attributeKey="dexterity";
             this.abilityName = "athletics";
+			this.attributeName = "Dexterity"
+
         }
     }
 }
