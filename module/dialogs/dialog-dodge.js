@@ -3,10 +3,8 @@ import { DiceRollContainer } from "../scripts/roll-dice.js";
 import CombatHelper from "../scripts/combat-helpers.js";
 import BonusHelper from "../scripts/bonus-helpers.js";
 
-export class GeneralRoll {
+export class Dodge {
     constructor(key, type) {
-        console.log(type)
-
         this.canRoll = false;
         this.close = false;
 
@@ -54,11 +52,6 @@ export class GeneralRoll {
             this.key = "dice";
             this.attributeValue = 3;
         }
-        else if(type =="dodge"){
-            this.abilityKey="athletics";
-            this.attributeKey="dexterity";
-            this.abilityName = "athletics";
-        }
     }
 }
 
@@ -80,8 +73,8 @@ export class DialogGeneralRoll extends FormApplication {
     */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            classes: ["wod20 wod-dialog general-dialog"],
-            template: "systems/worldofdarkness/templates/dialogs/dialog-generalroll.html",
+            classes: ["wod20 wod-dialog dodge-dialog"],
+            template: "systems/worldofdarkness/templates/dialogs/dialog-dodge.html",
             closeOnSubmit: false,
             submitOnChange: true,
             resizable: true
@@ -96,8 +89,6 @@ export class DialogGeneralRoll extends FormApplication {
         let attributeSpeciality = "";
         let abilitySpeciality = "";
         let specialityText = "";
-        console.log("abilityKey",attributeKey)
-        console.log("attributeKey",abilityKey)
 
         if (!this.isFreeRole) {
             data.actorData = this.actor.system;   
