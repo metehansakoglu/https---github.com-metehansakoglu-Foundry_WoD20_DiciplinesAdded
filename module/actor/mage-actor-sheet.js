@@ -9,27 +9,12 @@ export class MageActorSheet extends MortalActorSheet {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ["wod20 wod-sheet mage"],
-			template: "systems/worldofdarkness/templates/actor/mage-sheet.html",
-			tabs: [{
-				navSelector: ".sheet-tabs",
-				contentSelector: ".sheet-body",
-				initial: "core",
-			},
-			{
-				navSelector: ".sheet-setting-tabs",
-				contentSelector: ".sheet-setting-body",
-				initial: "attributes",
-			}]
+			template: "systems/worldofdarkness/templates/actor/mage-sheet.html"
 		});
 	}
   
 	constructor(actor, options) {
 		super(actor, options);
-
-		/* this.isCharacter = true;	
-		this.isGM = game.user.isGM;	 */
-		
-		console.log("WoD | Mage Sheet constructor");
 	}
 
 	/** @override */
@@ -37,11 +22,13 @@ export class MageActorSheet extends MortalActorSheet {
 		const actorData = duplicate(this.actor);
 
 		if (!actorData.system.settings.iscreated) {
-			if (actorData.type == CONFIG.wod.sheettype.mage) {
+			if (actorData.type == CONFIG.worldofdarkness.sheettype.mage) {
 				actorData.system.settings.iscreated = true;
 				actorData.system.settings.version = game.data.system.version;
+				actorData.system.settings.era = CONFIG.worldofdarkness.era[CONFIG.worldofdarkness.defaultMageEra];
+				actorData.system.settings.variant = "general";
 				
-				await CreateHelper.SetMageAbilities(actorData, "modern");
+				await CreateHelper.SetMageAbilities(actorData, CONFIG.worldofdarkness.defaultMageEra);
 				await CreateHelper.SetMortalAttributes(actorData);
 				await CreateHelper.SetMageAttributes(actorData);
 				
@@ -71,8 +58,8 @@ export class MageActorSheet extends MortalActorSheet {
 		data.actor.rotes = rotes.sort((a, b) => a.name.localeCompare(b.name));
 		data.actor.resonance = resonance.sort((a, b) => a.name.localeCompare(b.name));
 
-		if (actorData.type == CONFIG.wod.sheettype.mage) {
-			console.log(CONFIG.wod.sheettype.mage);
+		if (actorData.type == CONFIG.worldofdarkness.sheettype.mage) {
+			console.log(CONFIG.worldofdarkness.sheettype.mage);
 			console.log(data.actor);
 		}
 
@@ -120,7 +107,7 @@ export class MageActorSheet extends MortalActorSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		if (dataset.type != CONFIG.wod.sheettype.mage) {
+		if (dataset.type != CONFIG.worldofdarkness.sheettype.mage) {
 			return;
 		}			
 
@@ -141,7 +128,7 @@ export class MageActorSheet extends MortalActorSheet {
 		const dataset = element.dataset;
 		const type = dataset.type;
 
-		if (type != CONFIG.wod.sheettype.mage) {
+		if (type != CONFIG.worldofdarkness.sheettype.mage) {
 			return;
 		}
 

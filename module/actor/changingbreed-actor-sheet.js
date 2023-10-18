@@ -8,24 +8,12 @@ export class ChangingBreedActorSheet extends MortalActorSheet {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ["wod20 wod-sheet werewolf"],
-			template: "systems/worldofdarkness/templates/actor/changingbreed-sheet.html",
-			tabs: [{
-				navSelector: ".sheet-tabs",
-				contentSelector: ".sheet-body",
-				initial: "core",
-			},
-			{
-				navSelector: ".sheet-setting-tabs",
-				contentSelector: ".sheet-setting-body",
-				initial: "attributes",
-			}]
+			template: "systems/worldofdarkness/templates/actor/changingbreed-sheet.html"
 		});
 	}
   
 	constructor(actor, options) {
 		super(actor, options);
-
-		console.log("WoD | Changing Breed Sheet constructor");
 	}
 
 	/** @override */
@@ -75,8 +63,8 @@ export class ChangingBreedActorSheet extends MortalActorSheet {
 
 		data.actor.presentform = presentform;
 
-		if (actorData.type == CONFIG.wod.sheettype.changingbreed) {
-			console.log(CONFIG.wod.sheettype.changingbreed);
+		if (actorData.type == CONFIG.worldofdarkness.sheettype.changingbreed) {
+			console.log(CONFIG.worldofdarkness.sheettype.changingbreed);
 			console.log(data.actor);
 		}
 
@@ -127,7 +115,7 @@ export class ChangingBreedActorSheet extends MortalActorSheet {
 		const dataset = element.dataset;
 		const type = dataset.type;
 
-		if ((type != CONFIG.wod.sheettype.werewolf) && (type != CONFIG.wod.sheettype.changingbreed)) {
+		if ((type != CONFIG.worldofdarkness.sheettype.werewolf) && (type != CONFIG.worldofdarkness.sheettype.changingbreed)) {
 			return;
 		}
 
@@ -142,7 +130,7 @@ export class ChangingBreedActorSheet extends MortalActorSheet {
 		const dataset = element.dataset;
 		const type = dataset.type;
 
-		if ((type != CONFIG.wod.sheettype.werewolf) && (type != CONFIG.wod.sheettype.changingbreed)) {
+		if ((type != CONFIG.worldofdarkness.sheettype.werewolf) && (type != CONFIG.worldofdarkness.sheettype.changingbreed)) {
 			return;
 		}
 

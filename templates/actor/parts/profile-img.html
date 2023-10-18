@@ -1,32 +1,9 @@
-<div class="profile-img-zone">
-    <h1>{{ sheetType }}</h1>
-    {{#if locked}}
-        <div class="sheetsystem-label-group">
-            <label class="sheetsystem-label">Sheet:</label>
-            {{#if_eq data.data.headers.sheetsystem "darkages"}} 
-                <label class="sheetsystem-label sheetsystem-select-label ">{{localize "VTM5E.DarkAges"}}</label>
-            {{else if_eq data.data.headers.sheetsystem "wildwest"}} 
-                <label class="sheetsystem-label sheetsystem-select-label ">{{localize "VTM5E.WildWest"}}</label>
-            {{else}} 
-                <label class="sheetsystem-label sheetsystem-select-label ">{{localize "VTM5E.Modern"}}</label>
-            {{/if_eq}}
-        </div>
-    {{else }}
-    <select class="sheetsystem-select" name="data.headers.sheetsystem" data-type="String">
-        {{#select data.data.headers.sheetsystem}}
-            <option value="modern">{{localize "VTM5E.Modern"}}</option>
-            <option value="darkages">{{localize "VTM5E.DarkAges"}}</option>
-            <option value="wildwest">{{localize "VTM5E.WildWest"}}</option>
-        {{/select}}
-    </select>
-    {{/if}}
-    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" width="100"
-        alt="Profile Image" />
-    <button class="lock-btn">
+<div class="profile-img-zone" data-area="unlock">
+    <button class="lock-btn pointer fullSplatColor">
         {{#if locked}}
-        <i class="fa fa-lock"></i>
+            <i id="unlockSheet" class="lock-icon fa fa-lock"></i>
         {{ else }}
-        <i class="fa fa-lock-open"></i>
+            <i id="unlockSheet" class="lock-icon fa fa-unlock"></i>
         {{/if}}
-    </button>
+    </button>    
 </div>

@@ -13,6 +13,7 @@ import { VampireActorSheet } from "./module/actor/vampire-actor-sheet.js";
 import { ChangelingActorSheet } from "./module/actor/changeling-actor-sheet.js";
 import { HunterActorSheet } from "./module/actor/hunter-actor-sheet.js";
 import { DemonActorSheet } from "./module/actor/demon-actor-sheet.js";
+import { WraithActorSheet } from "./module/actor/wraith-actor-sheet.js";
 import { ChangingBreedActorSheet } from "./module/actor/changingbreed-actor-sheet.js";
 import { SpiritActorSheet } from "./module/actor/spirit-actor-sheet.js";
 import { CreatureActorSheet } from "./module/actor/creature-actor-sheet.js";
@@ -30,6 +31,7 @@ const SheetTypes = [
 	"Changeling",
 	"Hunter",
 	"Demon",
+	"Wraith",
 	"Changing Breed"
 ];
 const AdversaryTypes = [
@@ -62,65 +64,93 @@ Hooks.once("init", async function() {
 
 	console.log("WoD | Settings registered");
 	
-	CONFIG.wod = wod;
-	CONFIG.wod.attributeSettings = game.settings.get("worldofdarkness", "attributeSettings");
-	CONFIG.wod.rollSettings = game.settings.get('worldofdarkness', 'advantageRolls');
-	CONFIG.wod.hunteredgeSettings = game.settings.get('worldofdarkness', 'hunteredgeSettings');
-	CONFIG.wod.wererwolfrageSettings = game.settings.get('worldofdarkness', 'wererwolfrageSettings');
+	CONFIG.worldofdarkness = wod;
+	CONFIG.worldofdarkness.attributeSettings = game.settings.get("worldofdarkness", "attributeSettings");
+	CONFIG.worldofdarkness.rollSettings = game.settings.get('worldofdarkness', 'advantageRolls');
+	CONFIG.worldofdarkness.hunteredgeSettings = game.settings.get('worldofdarkness', 'hunteredgeSettings');
+	CONFIG.worldofdarkness.wererwolfrageSettings = game.settings.get('worldofdarkness', 'wererwolfrageSettings');
 
 	// Roll settings
 	try {
-		CONFIG.wod.handleOnes = game.settings.get('worldofdarkness', 'theRollofOne');
+		CONFIG.worldofdarkness.handleOnes = game.settings.get('worldofdarkness', 'theRollofOne');
 	} 
 	catch (e) {
-		CONFIG.wod.handleOnes = true;
+		CONFIG.worldofdarkness.handleOnes = true;
 	}
 
 	try {
-		CONFIG.wod.lowestDifficulty = parseInt(game.settings.get('worldofdarkness', 'lowestDifficulty'));
+		CONFIG.worldofdarkness.useOnesDamage = game.settings.get('worldofdarkness', 'useOnesDamage');
 	} 
 	catch (e) {
-		CONFIG.wod.lowestDifficulty = 2;
+		CONFIG.worldofdarkness.useOnesDamage = false;
 	}
 
 	try {
-		CONFIG.wod.specialityAddSuccess = parseInt(game.settings.get('worldofdarkness', 'specialityAddSuccess'));
-		CONFIG.wod.usespecialityAddSuccess = parseInt(game.settings.get('worldofdarkness', 'specialityAddSuccess')) > 0;
+		CONFIG.worldofdarkness.useOnesSoak = game.settings.get('worldofdarkness', 'useOnesSoak');
 	} 
 	catch (e) {
-		CONFIG.wod.specialityAddSuccess = 2;
-		CONFIG.wod.usespecialityAddSuccess = true;
+		CONFIG.worldofdarkness.useOnesSoak = false;
 	}
 
 	try {
-		CONFIG.wod.specialityReduceDiff = parseInt(game.settings.get('worldofdarkness', 'specialityReduceDiff'));
-		CONFIG.wod.usespecialityReduceDiff = parseInt(game.settings.get('worldofdarkness', 'specialityReduceDiff')) > 0;
+		CONFIG.worldofdarkness.lowestDifficulty = parseInt(game.settings.get('worldofdarkness', 'lowestDifficulty'));
 	} 
 	catch (e) {
-		CONFIG.wod.specialityReduceDiff = 0;
-		CONFIG.wod.usespecialityReduceDiff = false;
+		CONFIG.worldofdarkness.lowestDifficulty = 2;
 	}
 
 	try {
-		CONFIG.wod.tenAddSuccess = parseInt(game.settings.get('worldofdarkness', 'tenAddSuccess'));
-		CONFIG.wod.usetenAddSuccess = parseInt(game.settings.get('worldofdarkness', 'tenAddSuccess')) > 0;
+		CONFIG.worldofdarkness.specialityAddSuccess = parseInt(game.settings.get('worldofdarkness', 'specialityAddSuccess'));
+		CONFIG.worldofdarkness.usespecialityAddSuccess = parseInt(game.settings.get('worldofdarkness', 'specialityAddSuccess')) > 0;
 	} 
 	catch (e) {
-		CONFIG.wod.tenAddSuccess = 0;
-		CONFIG.wod.usetenAddSuccess = false;
+		CONFIG.worldofdarkness.specialityAddSuccess = 2;
+		CONFIG.worldofdarkness.usespecialityAddSuccess = true;
+	}
+
+	try {
+		CONFIG.worldofdarkness.specialityReduceDiff = parseInt(game.settings.get('worldofdarkness', 'specialityReduceDiff'));
+		CONFIG.worldofdarkness.usespecialityReduceDiff = parseInt(game.settings.get('worldofdarkness', 'specialityReduceDiff')) > 0;
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.specialityReduceDiff = 0;
+		CONFIG.worldofdarkness.usespecialityReduceDiff = false;
+	}
+
+	try {
+		CONFIG.worldofdarkness.tenAddSuccess = parseInt(game.settings.get('worldofdarkness', 'tenAddSuccess'));
+		CONFIG.worldofdarkness.usetenAddSuccess = parseInt(game.settings.get('worldofdarkness', 'tenAddSuccess')) > 0;
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.tenAddSuccess = 0;
+		CONFIG.worldofdarkness.usetenAddSuccess = false;
 	}	
 
 	try {
-		CONFIG.wod.explodingDice = game.settings.get('worldofdarkness', 'explodingDice');
-		CONFIG.wod.useexplodingDice = game.settings.get('worldofdarkness', 'explodingDice') != "never";
+		CONFIG.worldofdarkness.explodingDice = game.settings.get('worldofdarkness', 'explodingDice');
+		CONFIG.worldofdarkness.useexplodingDice = game.settings.get('worldofdarkness', 'explodingDice') != "never";
 	} 
 	catch (e) {
-		CONFIG.wod.explodingDice = "never";
-		CONFIG.wod.useexplodingDice = false;
+		CONFIG.worldofdarkness.explodingDice = "never";
+		CONFIG.worldofdarkness.useexplodingDice = false;
 	}
 
-	CONFIG.wod.observersSeeFullActor = game.settings.get('worldofdarkness', 'observersFullActorViewPermission');
-	CONFIG.wod.limitedSeeFullActor = game.settings.get('worldofdarkness', 'limitedFullActorViewPermission');
+	// Era settings
+	try {
+		CONFIG.worldofdarkness.defaultMortalEra = game.settings.get('worldofdarkness', 'eraMortal');
+		CONFIG.worldofdarkness.defaultMageEra = game.settings.get('worldofdarkness', 'eraMage');
+		CONFIG.worldofdarkness.defaultVampireEra = game.settings.get('worldofdarkness', 'eraVampire');
+		CONFIG.worldofdarkness.defaultWerewolfEra = game.settings.get('worldofdarkness', 'eraWerewolf');
+	} 
+	catch (e) {
+		CONFIG.worldofdarkness.defaultMortalEra = "modern";
+		CONFIG.worldofdarkness.defaultMageEra = "modern";
+		CONFIG.worldofdarkness.defaultVampireEra = "modern";
+		CONFIG.worldofdarkness.defaultWerewolfEra = "modern";
+	}
+
+	CONFIG.worldofdarkness.observersSeeFullActor = game.settings.get('worldofdarkness', 'observersFullActorViewPermission');
+	CONFIG.worldofdarkness.limitedSeeFullActor = game.settings.get('worldofdarkness', 'limitedFullActorViewPermission');
 
 	// Register sheet application classes
 	Actors.unregisterSheet("core", ActorSheet);
@@ -167,6 +197,12 @@ Hooks.once("init", async function() {
 		makeDefault: true
 	});
 
+	Actors.registerSheet("WoD", WraithActorSheet, {
+		label: "Wraith Sheet",
+		types: ["Wraith"],
+		makeDefault: true
+	});
+
 	Actors.registerSheet("WoD", ChangingBreedActorSheet, {
 		label: "Changing Breed Sheet",
 		types: ["Changing Breed"],
@@ -199,12 +235,12 @@ Hooks.once("init", async function() {
 	templates.preloadHandlebarsTemplates();
 	templates.registerHandlebarsHelpers();	
 
-	game.wod = {
+	game.worldofdarkness = {
 		powers: WoDSetup.getInstalledPowers(game.data.items)
 	};
 
-	game.wod.abilities = templates.SetupAbilities();
-	game.wod.bio = templates.SetupBio();
+	game.worldofdarkness.abilities = templates.SetupAbilities();
+	game.worldofdarkness.bio = templates.SetupBio();
 
 	console.log("WoD | Added Handelebars");  
 });
@@ -215,6 +251,54 @@ Hooks.once("init", async function() {
 Hooks.once("setup", function () {
     // Do anything after initialization but before
     // ready
+	/* CONFIG.fontDefinitions["Mortal"] = {
+		editor: true,
+		fonts: [{
+			urls: ["systems/worldofdarkness/assets/fonts/times.ttf"]
+		}]
+	};
+	CONFIG.fontDefinitions["Changeling"] = {
+		editor: true,
+		fonts: [{
+			urls: ["systems/worldofdarkness/assets/fonts/Umb000.ttf"]
+		}]
+	};
+	CONFIG.fontDefinitions["Vampire"] = {
+		editor: true,
+		fonts: [{
+			urls: ["systems/worldofdarkness/assets/fonts/percexp.ttf"]
+		}]
+	};
+	CONFIG.fontDefinitions["Mage"] = {
+		editor: true,
+		fonts: [{
+			urls: ["systems/worldofdarkness/assets/fonts/visit.TTF"]
+		}]
+	};
+	CONFIG.fontDefinitions["Werewolf"] = {
+		editor: true,
+		fonts: [{
+			urls: ["systems/worldofdarkness/assets/fonts/werewolf.ttf"]
+		}]
+	};
+	CONFIG.fontDefinitions["Hunter"] = {
+		editor: true,
+		fonts: [{
+			urls: ["systems/worldofdarkness/assets/fonts/hunter.ttf"]
+		}]
+	};
+	CONFIG.fontDefinitions["Demon"] = {
+		editor: true,
+		fonts: [{
+			urls: ["systems/worldofdarkness/assets/fonts/demon.ttf"]
+		}]
+	};
+	CONFIG.fontDefinitions["Wraith"] = {
+		editor: true,
+		fonts: [{
+			urls: ["systems/worldofdarkness/assets/fonts/Mat_____.ttf"]
+		}]
+	}; */
 });
 
 /* ------------------------------------ */
@@ -237,7 +321,11 @@ Hooks.once("ready", async function () {
 			ui.notifications.info("Done!", {permanent: true});
 		}
 	}
-	CONFIG.language = game.i18n.lang;
+	CONFIG.language = game.i18n.lang;	
+
+	if (game.worldofdarkness.abilities == undefined) {
+		ui.notifications.error("World of Darkness settings couldn't load! Check your modules!", {permanent: true});
+	}
 });
 
 Hooks.on("renderActorSheet", (sheet) => { 
@@ -265,7 +353,7 @@ Hooks.on("renderActorSheet", (sheet) => {
 		sheet.element[0].classList.add("langEN");
 	}
 
-	if ((!CONFIG.wod.sheetsettings.useSplatFonts) || (!useSplatFonts)) {
+	if ((!CONFIG.worldofdarkness.sheetsettings.useSplatFonts) || (!useSplatFonts)) {
 		sheet.element[0].classList.add("noSplatFont");
 	}
 });
@@ -295,7 +383,7 @@ Hooks.on("renderItemSheet", (sheet) => {
 		sheet.element[0].classList.add("langEN");
 	}
 
-	if ((!CONFIG.wod.sheetsettings.useSplatFonts) || (!useSplatFonts)) {
+	if ((!CONFIG.worldofdarkness.sheetsettings.useSplatFonts) || (!useSplatFonts)) {
 		sheet.element[0].classList.add("noSplatFont");
 	}
 

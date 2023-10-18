@@ -209,11 +209,16 @@ export class ArtPower {
         this.type = item.system["type"];
         this.parentid = item.system["parentid"];
 
-        if (item.system.property["arttype"] == undefined) {
+        if (item.system["arttype"] == "") {
             this.arttype = game.i18n.localize("wod.dialog.power.notset");
         }
         else {
-            this.arttype = item.system.property["arttype"];
+            this.arttype = item.system["arttype"];
+            this.selectedarttype = "";
+
+            if (this.arttype != "wod.labels.both") {
+                this.selectedarttype = this.arttype;
+            }
         }        
 
         this.dice1 = "art";
@@ -329,6 +334,38 @@ export class LorePower {
     }
 }
 
+export class ArcanoiPower {
+    constructor(item) {
+        this.attributeValue = 0;
+        this.attributeName = "";
+
+        this.abilityValue = 0;
+        this.abilityName = "";
+
+        this.hasSpeciality = false;
+        this.specialityText = "";        
+
+        this.name = item["name"];
+        //this.type = item["type"];
+        this.type = item.system["type"];
+        this.dice1 = item.system["dice1"];
+        this.dice2 = item.system["dice2"];
+        this.bonus = parseInt(item.system["bonus"]);
+
+        this.parentid = item.system["parentid"];
+
+        this.difficulty = parseInt(item.system["difficulty"]);
+        this.description = item.system["description"];
+        this.system = item.system["details"];
+
+        this.canRoll = this.difficulty > -1 ? true : false;
+        this.close = false;
+        this.sheettype = "wraithDialog";
+    }
+}
+
+ArcanoiPower
+
 export class DialogPower extends FormApplication {
     constructor(actor, power) {
         super(power, {submitOnChange: true, closeOnSubmit: false});
@@ -369,7 +406,7 @@ export class DialogPower extends FormApplication {
         let specialityText = "";
 
         data.actorData = this.actor.system;
-        data.config = CONFIG.wod;
+        data.config = CONFIG.worldofdarkness;
 
         // is dice1 an Attributes
         if ((this.actor.system?.attributes != undefined) && (this.actor.system.attributes[data.object.dice1]?.value != undefined)) {
@@ -392,7 +429,7 @@ export class DialogPower extends FormApplication {
             data.object.attributeName = game.i18n.localize(this.actor.system.advantages[data.object.dice1].label);
 
             // om willpower
-            if ((this.actor.system.advantages[data.object.dice1].label == "wod.advantages.willpower") && (CONFIG.wod.attributeSettings == "5th")) {
+            if ((this.actor.system.advantages[data.object.dice1].label == "wod.advantages.willpower") && (CONFIG.worldofdarkness.attributeSettings == "5th")) {
                 if (parseInt(this.actor.system.attributes?.composure.value) >= 4) {
                     data.object.hasSpeciality = true;
 
@@ -451,7 +488,13 @@ export class DialogPower extends FormApplication {
             }  
             else if ((this.actor.system?.abilities != undefined) && (this.actor.system.abilities[data.object.dice2]?.value != undefined)) {
                 data.object.abilityValue = parseInt(this.actor.system.abilities[data.object.dice2].value);
-                data.object.abilityName = game.i18n.localize(this.actor.system.abilities[data.object.dice2].label);
+
+                if (this.actor.system.abilities[data.object.dice2] == undefined) {
+                    data.object.abilityName = game.i18n.localize(this.actor.system.abilities[data.object.dice2].label);
+                }
+                else {
+                    data.object.abilityName = (this.actor.system.abilities[data.object.dice2].altlabel == "") ? game.i18n.localize(this.actor.system.abilities[data.object.dice2].label) : this.actor.system.abilities[data.object.dice2].altlabel;        
+                }                
 
                 if (parseInt(this.actor.system.abilities[data.object.dice2].value) >= 4) {
                     data.object.hasSpeciality = true;
@@ -482,6 +525,11 @@ export class DialogPower extends FormApplication {
                     }
                 }
             }
+        }
+        else if (data.object.type == "wod.types.arcanoipower") {
+            const arcanoi = await this.actor.getEmbeddedDocument("Item", data.object.parentid);
+            data.object.abilityValue = parseInt(arcanoi.system.value);
+            data.object.abilityName = arcanoi.name;
         }
 
         if (data.object.hasSpeciality) {
@@ -531,7 +579,11 @@ export class DialogPower extends FormApplication {
 
         html
             .find('.dialog-realm-button')
-            .click(this._selectRealm.bind(this));            
+            .click(this._selectRealm.bind(this));     
+
+        html
+            .find('.dialog-arttype-button')
+            .click(this._selectArttype.bind(this));
 
         html
             .find('.closebutton')
@@ -554,12 +606,12 @@ export class DialogPower extends FormApplication {
         
         this.object.useSpeciality = formData["specialty"];
 
-        if (this.object.useSpeciality && CONFIG.wod.usespecialityReduceDiff && !this.object.usedReducedDiff) {
-            this.object.difficulty -= CONFIG.wod.specialityReduceDiff;
+        if (this.object.useSpeciality && CONFIG.worldofdarkness.usespecialityReduceDiff && !this.object.usedReducedDiff) {
+            this.object.difficulty -= CONFIG.worldofdarkness.specialityReduceDiff;
             this.object.usedReducedDiff = true;
         }
-        else if (!this.object.useSpeciality && CONFIG.wod.usespecialityReduceDiff && this.object.usedReducedDiff){
-            this.object.difficulty += CONFIG.wod.specialityReduceDiff;
+        else if (!this.object.useSpeciality && CONFIG.worldofdarkness.usespecialityReduceDiff && this.object.usedReducedDiff){
+            this.object.difficulty += CONFIG.worldofdarkness.specialityReduceDiff;
             this.object.usedReducedDiff = false;
         }
 
@@ -606,6 +658,16 @@ export class DialogPower extends FormApplication {
         event.preventDefault();
 
         this.object.selectedRealms = this._changedSelectedRealm(this.object.selectedRealms, key);
+        this.render();
+    }
+
+    _selectArttype(event) {
+        event.preventDefault();
+
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+
+        this.object.selectedarttype = dataset.value;
         this.render();
     }
 
@@ -660,6 +722,11 @@ export class DialogPower extends FormApplication {
 
         // add selected Realms
         if (this.object.type == "wod.types.artpower") {
+            if (this.object.selectedarttype == "") {
+                ui.notifications.warn(game.i18n.localize("wod.dialog.power.noarttype"));
+                return;
+            }
+
             if (!this.object.isUnleashing) {
                 this.object.canRoll = false;
 
@@ -681,6 +748,8 @@ export class DialogPower extends FormApplication {
             else {
                 extraInfo.push(`${game.i18n.localize('wod.dialog.power.unleashing')}`);
             }
+
+            extraInfo.push(`${game.i18n.localize(this.object.selectedarttype)}`);
         }
 
         const numDices = parseInt(this.object.attributeValue) + parseInt(this.object.abilityValue) + parseInt(this.object.bonus);

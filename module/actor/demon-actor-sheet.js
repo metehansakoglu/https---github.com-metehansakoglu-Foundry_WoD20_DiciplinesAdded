@@ -9,24 +9,12 @@ export class DemonActorSheet extends MortalActorSheet {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ["wod20 wod-sheet demon"],
-			template: "systems/worldofdarkness/templates/actor/demon-sheet.html",
-			tabs: [{
-				navSelector: ".sheet-tabs",
-				contentSelector: ".sheet-body",
-				initial: "core",
-			},
-			{
-				navSelector: ".sheet-setting-tabs",
-				contentSelector: ".sheet-setting-body",
-				initial: "attributes",
-			}]
+			template: "systems/worldofdarkness/templates/actor/demon-sheet.html"
 		});
 	}
   
 	constructor(actor, options) {
 		super(actor, options);
-		
-		console.log("WoD | Demon Sheet constructor");
 	}
 
 	/** @override */
@@ -34,11 +22,12 @@ export class DemonActorSheet extends MortalActorSheet {
 		const actorData = duplicate(this.actor);
 
 		if (!actorData.system.settings.iscreated) {
-			if (actorData.type == CONFIG.wod.sheettype.demon) {
+			if (actorData.type == CONFIG.worldofdarkness.sheettype.demon) {
 				const version = game.data.system.version;
 
 				actorData.system.settings.iscreated = true;
 				actorData.system.settings.version = game.data.system.version;
+				actorData.system.settings.variant = "general";
 
 				//await CreateHelper.SetDemonAbilities(actorData);
 				await CreateHelper.SetAbilities(actorData, "demon", "modern");
@@ -178,8 +167,8 @@ export class DemonActorSheet extends MortalActorSheet {
 
 		data.actor.system.listdata.forms = forms;
 
-		if (actorData.type == CONFIG.wod.sheettype.demon) {
-			console.log(CONFIG.wod.sheettype.demon);
+		if (actorData.type == CONFIG.worldofdarkness.sheettype.demon) {
+			console.log(CONFIG.worldofdarkness.sheettype.demon);
 			console.log(data.actor);
 		}
 
@@ -249,7 +238,7 @@ export class DemonActorSheet extends MortalActorSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		if (dataset.type != CONFIG.wod.sheettype.demon) {
+		if (dataset.type != CONFIG.worldofdarkness.sheettype.demon) {
 			return;
 		}
 
@@ -257,7 +246,7 @@ export class DemonActorSheet extends MortalActorSheet {
 	}
 	
 	async _onDotCounterDemonChange(event) {
-		console.log("WoD | Demon Sheet _onDotCounterChange");
+		console.log("WoD | Demon Sheet _onDotCounterDemonChange");
 		
 		event.preventDefault();
 
@@ -265,7 +254,7 @@ export class DemonActorSheet extends MortalActorSheet {
 		const dataset = element.dataset;
 		const type = dataset.type;
 
-		if (type != CONFIG.wod.sheettype.demon) {
+		if (type != CONFIG.worldofdarkness.sheettype.demon) {
 			return;
 		}
 

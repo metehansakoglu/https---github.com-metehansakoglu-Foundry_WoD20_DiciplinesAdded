@@ -8,24 +8,12 @@ export class HunterActorSheet extends MortalActorSheet {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ["wod20 wod-sheet hunter"],
-			template: "systems/worldofdarkness/templates/actor/hunter-sheet.html",
-			tabs: [{
-				navSelector: ".sheet-tabs",
-				contentSelector: ".sheet-body",
-				initial: "core",
-			},
-			{
-				navSelector: ".sheet-setting-tabs",
-				contentSelector: ".sheet-setting-body",
-				initial: "attributes",
-			}]
+			template: "systems/worldofdarkness/templates/actor/hunter-sheet.html"
 		});
 	}
   
 	constructor(actor, options) {
 		super(actor, options);
-		
-		console.log("WoD | Hunter Sheet constructor");
 	}
 
 	/** @override */
@@ -33,9 +21,10 @@ export class HunterActorSheet extends MortalActorSheet {
 		const actorData = duplicate(this.actor);
 
 		if (!actorData.system.settings.iscreated) {
-			if (actorData.type == CONFIG.wod.sheettype.hunter) {
+			if (actorData.type == CONFIG.worldofdarkness.sheettype.hunter) {
 				actorData.system.settings.iscreated = true;
 				actorData.system.settings.version = game.data.system.version;
+				actorData.system.settings.variant = "general";
 
 				//await CreateHelper.SetHunterAbilities(actorData);
 				await CreateHelper.SetAbilities(actorData, "hunter", "modern");
@@ -50,8 +39,8 @@ export class HunterActorSheet extends MortalActorSheet {
 
 		console.log("WoD | Hunter Sheet getData");
 
-		if (actorData.type == CONFIG.wod.sheettype.hunter) {
-			console.log(CONFIG.wod.sheettype.hunter);
+		if (actorData.type == CONFIG.worldofdarkness.sheettype.hunter) {
+			console.log(CONFIG.worldofdarkness.sheettype.hunter);
 			console.log(data.actor);
 		}
 
@@ -98,7 +87,7 @@ export class HunterActorSheet extends MortalActorSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		if (dataset.type != CONFIG.wod.sheettype.hunter) {
+		if (dataset.type != CONFIG.worldofdarkness.sheettype.hunter) {
 			return;
 		}
 
@@ -114,7 +103,7 @@ export class HunterActorSheet extends MortalActorSheet {
 		const dataset = element.dataset;
 		const type = dataset.type;
 
-		if (type != CONFIG.wod.sheettype.hunter) {
+		if (type != CONFIG.worldofdarkness.sheettype.hunter) {
 			return;
 		}
 

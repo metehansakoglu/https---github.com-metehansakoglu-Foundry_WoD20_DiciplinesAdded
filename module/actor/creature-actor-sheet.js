@@ -8,27 +8,14 @@ export class CreatureActorSheet extends MortalActorSheet {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ["wod20 wod-sheet creature"],
-			template: "systems/worldofdarkness/templates/actor/creature-sheet.html",
-			tabs: [{
-				navSelector: ".sheet-tabs",
-				contentSelector: ".sheet-body",
-				initial: "core",
-			},
-			{
-				navSelector: ".sheet-setting-tabs",
-				contentSelector: ".sheet-setting-body",
-				initial: "attributes",
-			}]
+			template: "systems/worldofdarkness/templates/actor/creature-sheet.html"
 		});
 	}
   
 	constructor(actor, options) {
 		super(actor, options);
 
-		this.isCharacter = false;	
-		// this.isGM = game.user.isGM;
-		
-		console.log("WoD | Creature Sheet constructor");
+		this.isCharacter = false;
 	}
 
 	/** @override */
@@ -36,7 +23,7 @@ export class CreatureActorSheet extends MortalActorSheet {
 		const actorData = duplicate(this.actor);
 
 		if (!actorData.system.settings.iscreated) {
-			if (actorData.type == CONFIG.wod.sheettype.creature) {
+			if (actorData.type == CONFIG.worldofdarkness.sheettype.creature) {
 				actorData.system.settings.iscreated = true;
 				actorData.system.settings.version = game.data.system.version;
 
@@ -52,10 +39,14 @@ export class CreatureActorSheet extends MortalActorSheet {
 
 		console.log("WoD | Creature Sheet getData");
 
-		if (actorData.type == CONFIG.wod.sheettype.creature) {
-			console.log(CONFIG.wod.sheettype.creature);
+		if (actorData.type == CONFIG.worldofdarkness.sheettype.creature) {
+			console.log(CONFIG.worldofdarkness.sheettype.creature);
 			console.log(data.actor);
 		}
+
+		/* if (data.actor.system.settings.variant == "") {
+			ActionHelper.openVariantDialog(this.actor);
+		} */
 
 		return data;
 	}
@@ -94,7 +85,7 @@ export class CreatureActorSheet extends MortalActorSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		if (dataset.type != CONFIG.wod.sheettype.creature) {
+		if (dataset.type != CONFIG.worldofdarkness.sheettype.creature) {
 			return;
 		}
 
@@ -108,7 +99,7 @@ export class CreatureActorSheet extends MortalActorSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		if (dataset.type != CONFIG.wod.sheettype.creature) {
+		if (dataset.type != CONFIG.worldofdarkness.sheettype.creature) {
 			return;
 		}
 

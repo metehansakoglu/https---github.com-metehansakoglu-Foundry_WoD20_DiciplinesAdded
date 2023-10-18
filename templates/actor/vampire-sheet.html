@@ -1,67 +1,135 @@
-<form class="{{cssClass}} flexcol {{#if locked}}locked{{/if}} vampire-sheet" autocomplete="off">
-  {{!-- Vampire Sheet Header --}}
-  <header class="sheet-header">
-    {{> "systems/wod20/templates/actor/parts/profile-img.html"}}
-    <div class="header-fields">
-      <div class="grid grid-3col flexrow">
-        <h1 class="charname">
-          <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'VTM5E.Name'}}" />
-        </h1>
-        <h1 class="charname">
-          <input name="data.clan.value" type="text" value="{{data.data.clan.value}}"
-            placeholder="{{localize 'VTM5E.Clan'}}" />
-        </h1>
-        <h1 class="charname">
-          <input name="data.headers.nature" type="text" value="{{data.data.headers.nature}}"
-            placeholder="{{localize 'VTM5E.Ambition'}}" />
-        </h1>
-      </div>
-      {{!-- The grid classes are defined in scss/global/_grid.scss. To use, use
-      both the "grid" and "grid-Ncol" class where "N" can be any number from 1
-      to 12 and will create that number of columns. --}}
-      <div class="resources grid grid-4col">
-        {{!-- "flex-group-center" is also defined in the _grid.scss file and it
-        will add a small amount of padding, a border, and will center all of its
-        child elements content and text. --}} {{>
-        "systems/wod20/templates/actor/parts/health.html"}} {{>
-        "systems/wod20/templates/actor/parts/willpower.html"}} {{>
-        "systems/wod20/templates/actor/parts/humanity.html"}} {{>
-        "systems/wod20/templates/actor/parts/bloodpool.html"}}
-      </div>
-      {{!-- The grid classes are defined in scss/global/_grid.scss. To use, use
-      both the "grid" and "grid-Ncol" class where "N" can be any number from 1
-      to 12 and will create that number of columns. --}}
-      <div class="resources grid grid-3col">
-        {{setDividedExp}}
-        {{#unless isDividedExp}}
-        {{> "systems/wod20/templates/actor/parts/exp.html"}}
-        {{else}}
-        {{> "systems/wod20/templates/actor/parts/dividedExp.html"}}
-        {{/unless}}
-        {{> "systems/wod20/templates/actor/parts/frenzy-rot-combined.html"}}
-        {{> "systems/wod20/templates/actor/parts/soak-init-combined.html"}}
-      </div>
-    </div>
-  </header>
+<form class="{{cssClass}} flexcol {{#if locked}}locked{{/if}} {{getEra actor}}" autocomplete="off">
 
-  {{!-- Vampire Sheet Tab Navigation --}}
-  <nav class="sheet-tabs tabs" data-group="primary">
-    <a class="item" data-tab="stats">{{localize "VTM5E.Stats"}}</a>
-    <a class="item" data-tab="disciplines">{{localize "VTM5E.Disciplines"}}</a>
-    <a class="item" data-tab="features">{{localize "VTM5E.Features"}}</a>
+	<!-- Vampire Sheet Header -->
+	<div class="sheet-character">				
+	
+		{{!-- Always visible --}}
+		<header class="sheet-header">		
+					
+		</header>	
 
-    <a class="item" data-tab="description">{{localize "VTM5E.Description"}}</a>
-    <a class="item" data-tab="combat">{{localize "VTM5E.Combat"}}</a>
-    <a class="item" data-tab="other">{{localize "VTM5E.Other"}}</a>
-  </nav>
+		<!-- Sheet part -->
+		<section class="sheet-body">
 
-  {{!-- Vampire Sheet Body --}}
-  <section class="sheet-body">
-    {{!-- Stats Tab --}} {{> "systems/wod20/templates/actor/parts/stats.html"}} {{!-- Owned Powers Tab --}} {{>
-    "systems/wod20/templates/actor/parts/disciplines.html"}} {{!-- Owned Features Tab --}} {{>
-    "systems/wod20/templates/actor/parts/features.html"}} {{!-- Blood Tab --}} {{!-- Biography Tab --}} {{>
-    "systems/wod20/templates/actor/parts/biography.html"}} {{! -- Combat --}} {{>
-    "systems/wod20/templates/actor/parts/combat.html"}} {{!-- Other Tab --}} {{>
-    "systems/wod20/templates/actor/parts/other.html"}}
-  </section>
+			<!-- Menu -->
+			<div class="navigation pullLeft">
+				{{#if (eq actor.limited false)}}
+					<!-- Lock/Unlock -->
+					{{> "systems/worldofdarkness/templates/actor/parts/profile-img.html"}}	
+				{{/if}}
+
+				<!-- Navigation -->
+				{{> "systems/worldofdarkness/templates/actor/parts/navigation.html"}}
+			</div>
+
+			<div class="pullRight" data-area="microicons">
+				<!-- Macro icons -->
+				{{> "systems/worldofdarkness/templates/actor/parts/macro_icons.html"}}
+			</div>
+
+			<div class="centerText sheet-headline splatFont">
+				VAMPIRE THE MASQUERADE
+			</div>	
+
+			<!-- Bio tab -->
+			<div class="tab bio sheet-inner-area" data-group="primary" data-tab="bio">
+
+				{{~> "systems/worldofdarkness/templates/actor/parts/bio.html"}} 	
+
+			</div>
+		
+			<!-- Core Normal -->
+			<div class="tab core sheet-inner-area" data-group="primary" data-tab="core">
+
+				<!-- Core Attributes -->
+				<div class="sheet-area flex-columns">
+					{{> "systems/worldofdarkness/templates/actor/parts/attributes.html"}} 	
+				</div>
+
+				<!-- Core Abilities -->
+				<div class="sheet-area flex-columns">
+					{{> "systems/worldofdarkness/templates/actor/parts/abilities.html"}}
+				</div>
+
+				<!-- Core Stats -->
+				<div class="sheet-area flex-columns">
+					<div class="clearareaBox" style="display: flex;">
+						<div class="sheet-boxcontainer">
+
+							<div class="pullLeft" style="width: 33%; height: 100%; display: flex; flex-direction: column;">
+						
+								{{> "systems/worldofdarkness/templates/actor/parts/stats_virtue.html"}}
+								
+							</div>
+							
+							<div class="pullLeft" style="width: 33%; min-height: 259px; display: flex; flex-direction: column;">
+
+								{{> "systems/worldofdarkness/templates/actor/parts/stats_path.html"}}
+					
+								<div style="margin-top: auto; margin-bottom: auto;">
+									{{> "systems/worldofdarkness/templates/actor/parts/stats_willpower.html"}}
+								</div>
+
+								<div style="margin-top: auto;">
+									{{> "systems/worldofdarkness/templates/actor/parts/stats_bloodpool.html"}}
+								</div>
+						
+							</div>
+							
+							<div class="pullLeft healthBox" style="width: 33%; height: 100%; display: flex; flex-direction: column;">
+								
+								<div style="width: 100%;">
+									{{> "systems/worldofdarkness/templates/actor/parts/stats_health.html"}}
+								</div>
+						
+								<div class="sheet-headline headlineGroup splatFont" style="margin-top: auto;">
+									<div>
+										<div class="sheet-banner-small"><span class="sheet-banner-text">{{localize 'wod.experience.experience'}}</span></div>
+										<div class="experienceValue">{{actor.system.listdata.experiences.experience}}</div>
+									</div>
+								</div>
+							</div>
+						</div>						
+					</div>
+				</div>
+			</div>
+
+			{{!-- Combat Tab --}}
+			<div class="tab combat sheet-inner-area" data-group="primary" data-tab="combat">
+
+				{{> "systems/worldofdarkness/templates/actor/parts/combat.html"}}
+
+			</div>
+
+			{{!-- Gear Tab --}}
+			<div class="tab gear sheet-inner-area" data-group="primary" data-tab="gear">
+
+				{{~> "systems/worldofdarkness/templates/actor/parts/gear.html"}}
+
+			</div>
+
+			{{!-- Discipline Tab --}}
+			<div class="tab discipline sheet-inner-area" data-group="primary" data-tab="discipline">
+
+				{{> "systems/worldofdarkness/templates/actor/parts/vampire/disciplines.html"}}
+
+			</div>
+
+			{{!-- Notes Tab --}}
+			<div class="tab note sheet-inner-area" data-group="primary" data-tab="note">
+
+				{{> "systems/worldofdarkness/templates/actor/parts/notes.html"}}
+
+			</div>
+			
+			{{!-- Settings Tab --}}
+			<div class="tab settings sheet-inner-area" data-group="primary" data-tab="settings">
+			
+				{{> "systems/worldofdarkness/templates/actor/parts/settings.html"}}
+				
+			</div>
+		
+		</section>
+	</div>
+		
 </form>
